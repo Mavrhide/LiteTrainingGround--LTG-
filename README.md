@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="img/photo_2026-08-08_20-32-18.jpg" alt="LiteTrainingGround Banner" width="100%">
+
 # 🏦 LiteTrainingGround (LTG)
 
 ### Сегментированный киберполигон в формате банковской инфраструктуры
@@ -50,6 +52,9 @@ Internet → WAF → Bank App Server → DMZ pivot
 
 ## 🗺️ Архитектура
 
+<!-- Скриншот схемы сети: положи файл как img/architecture.png -->
+<!-- <img src="img/architecture.png" alt="Network Architecture" width="100%"> -->
+
 | Сегмент | Подсеть | Назначение |
 |---|---|---|
 | DMZ | `10.0.10.0/24` | WAF-прокси, банковское веб-приложение |
@@ -66,6 +71,14 @@ Internet → WAF → Bank App Server → DMZ pivot
 ## 📌 Планы
 
 Актуальный статус и ближайшие шаги — во вкладке [Projects](../../projects) репозитория.
+
+## 🔗 Ссылки
+
+- 👤 Автор: [**Mavrhide**](https://github.com/Mavrhide)
+- 💬 Telegram: [t.me/mavrhide](https://t.me/mavrhide)
+- 🏆 HackTheBox: [профиль](https://profile.hackthebox.com/profile/019df95b-5a96-71ec-aa89-5a83d3e2b07c)
+- 🏆 TryHackMe: [профиль](https://tryhackme.com/p/mavrhide)
+- 📜 Сертификаты: [PT EdTechLab — SIEM](https://github.com/Mavrhide/Certificates/blob/main/PT-EdTechLab-SIEM.pdf) · [PT EdTechLab — NTA](https://github.com/Mavrhide/Certificates/blob/main/PT-EdTechLab-NTA.pdf)
 
 ---
 
