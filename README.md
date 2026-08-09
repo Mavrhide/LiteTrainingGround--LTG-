@@ -2,9 +2,9 @@
 
 <img src="img/photo_2026-08-08_20-32-18.jpg" alt="LiteTrainingGround Banner" width="100%">
 
-# 🏦 LiteTrainingGround (LTG)
+# 🎯 LiteTrainingGround (LTG)
 
-### Сегментированный киберполигон в формате банковской инфраструктуры
+### Сегментированный киберполигон с тремя бизнес-доменами и SOC-контуром
 
 ![Status](https://img.shields.io/badge/status-🚧%20в%20разработке-orange?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)
@@ -22,11 +22,11 @@
 **Прогресс:**
 
 - [x] Архитектура сети и модель угроз
-- [x] Схема сегментации (DMZ / Corporate / Legacy / SOC)
+- [x] Схема сегментации (E-commerce / Bank / Hospital / SOC)
 - [ ] Конфигурация firewall (nftables)
-- [ ] DMZ: WAF + уязвимое банковское приложение
-- [ ] Corporate: AD DC, AD CS, рабочая станция
-- [ ] Legacy: сервер 2008 R2 с EternalBlue
+- [ ] E-commerce: WAF + уязвимый интернет-магазин техники
+- [ ] Bank: AD DC, core-banking БД, рабочая станция оператора
+- [ ] Hospital: EHR/PACS-сервер, legacy-хост с медицинским ПО
 - [ ] SOC: Suricata + Wazuh/ELK
 - [ ] Скрипты автодеплоя (Vagrant/Packer)
 - [ ] Сценарии атак с пошаговым прохождением
@@ -36,16 +36,27 @@
 
 ## 🎯 Идея проекта
 
-**LiteTrainingGround** — это не набор изолированных CTF-заданий, а связная инфраструктура, где каждая уязвимость является шагом единой цепочки атаки: от точки входа в DMZ до получения прав Domain Admin, с параллельным разбором того, что из этого детектит SOC.
+**LiteTrainingGround** — это не набор изолированных CTF-заданий, а связная инфраструктура из трёх разных бизнес-доменов (e-commerce, банк, медицина), где каждая уязвимость — шаг единой цепочки атаки: от точки входа в интернет-магазине до получения прав Domain Admin в корпоративной сети и доступа к данным пациентов/клиентов, с параллельным разбором того, что из этого детектит SOC.
+
+Три домена нужны, чтобы отработать разные модели угроз и разные классы защищаемых данных на одной инфраструктуре:
+
+| Домен | Что защищает | Типичные риски для отработки |
+|---|---|---|
+| 🛒 E-commerce | Данные карт, заказы | SQLi, IDOR, уязвимости WAF-обхода |
+| 🏦 Bank | Финансовые операции, PCI DSS | AD-атаки, повышение привилегий, боковое движение |
+| 🏥 Hospital | ПДн пациентов, мед. системы | Legacy-хосты, устаревшие протоколы, EternalBlue-класс |
+| 🛰 SOC | Мониторинг всего периметра | Detection engineering, разбор алертов |
 
 ```
-Internet → WAF → Bank App Server → DMZ pivot
-                                        │
-                                        ▼
-                         Corporate (AD DS, AD CS, workstations)
-                                        │
-                                        ▼
-                              Legacy (устаревшие хосты)
+Internet → WAF → Онлайн-магазин техники (точка входа)
+                            │
+                            ▼
+              Общая корпоративная сеть (AD DS, AD CS)
+                    │                       │
+                    ▼                       ▼
+             Bank-сегмент             Hospital-сегмент
+        (core-banking БД,          (EHR/PACS, legacy-хосты
+         рабочие станции)           с устаревшим ПО)
 
 Всё происходящее — Suricata NIDS + SIEM в изолированном SOC-сегменте
 ```
@@ -57,16 +68,16 @@ Internet → WAF → Bank App Server → DMZ pivot
 
 | Сегмент | Подсеть | Назначение |
 |---|---|---|
-| DMZ | `10.0.10.0/24` | WAF-прокси, банковское веб-приложение |
-| Corporate | `10.0.20.0/24` | Active Directory, БД, рабочие станции |
-| Legacy | `10.0.30.0/24` | Устаревшие серверы и хосты |
+| E-commerce (DMZ) | `10.0.10.0/24` | WAF-прокси, веб-приложение интернет-магазина техники |
+| Bank | `10.0.20.0/24` | AD DС, core-banking БД, рабочая станция оператора |
+| Hospital | `10.0.30.0/24` | EHR/PACS-сервер, legacy-хост, рабочая станция мед. персонала |
 | SOC | `10.0.40.0/24` | Suricata NIDS, SIEM, мониторинг |
 
 Полная архитектура и модель угроз — в [`docs/architecture.md`](docs/architecture.md) *(скоро)*.
 
 ## 🛠️ Стек
 
-`nftables` · `Suricata` · `Wazuh/ELK` · `HAProxy + ModSecurity` · `Active Directory` · `Vagrant`
+`nftables` · `Suricata` · `Wazuh/ELK` · `HAProxy + ModSecurity` · `Active Directory` · `PostgreSQL` · `Vagrant`
 
 ## 📌 Планы
 
