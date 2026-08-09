@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="img/photo_2026-08-08_20-32-18.jpg" alt="LiteTrainingGround Banner" width="100%">
+<img src="img/TopologySYSTEM.png" alt="LiteTrainingGround Banner" width="100%">
 
 # 🎯 LiteTrainingGround (LTG)
 
