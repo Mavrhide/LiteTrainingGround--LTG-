@@ -1,4 +1,7 @@
 #!/bin/bash
+
+sudo iptables -L > /dev/null
+
 sudo iptables -F FORWARD
 sudo iptables -A FORWARD -s 10.0.10.30 -d 10.0.20.30 -p tcp --dport 443 -j ACCEPT
 sudo iptables -A FORWARD -p tcp -d 10.0.10.30 --dport 80 -j ACCEPT
