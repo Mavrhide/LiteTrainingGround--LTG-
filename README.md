@@ -23,10 +23,10 @@
 
 - [x] Архитектура сети и модель угроз
 - [x] Схема сегментации (E-commerce / Bank / Hospital / SOC)
-- [ ] Конфигурация firewall (nftables)
-- [ ] E-commerce: WAF + уязвимый интернет-магазин техники
-- [ ] Bank: AD DC, core-banking БД, рабочая станция оператора
-- [ ] Hospital: EHR/PACS-сервер, legacy-хост с медицинским ПО
+- [x] Конфигурация firewall (nftables)
+- [x] E-commerce: WAF + уязвимый интернет-магазин техники
+- [x] Bank: AD DC, core-banking БД, рабочая станция оператора
+- [x] Hospital: EHR/PACS-сервер, legacy-хост с медицинским ПО
 - [ ] SOC: Suricata + Wazuh/ELK
 - [ ] Скрипты автодеплоя (Vagrant/Packer)
 - [ ] Сценарии атак с пошаговым прохождением
