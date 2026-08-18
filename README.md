@@ -4,133 +4,205 @@
 
 # 🎯 LITE TRAINING GROUND
 
-### `[ e-commerce ]` → `[ bank ]` → `[ hospital ]` → `[ SOC видит всё ]`
+### `[ e-commerce ]` → `[ bank ]` → `[ hospital ]` — one kill chain, three business domains, one SOC watching it all
 
 <br>
 
-![Status](https://img.shields.io/badge/STATUS-В%20РАЗРАБОТКЕ-orange?style=for-the-badge&labelColor=black)
-![License](https://img.shields.io/badge/LICENSE-MIT-blue?style=for-the-badge&labelColor=black)
-![Segments](https://img.shields.io/badge/СЕГМЕНТОВ-4-critical?style=for-the-badge&labelColor=black)
-![Made in](https://img.shields.io/badge/MADE%20IN-DAGESTAN-green?style=for-the-badge&labelColor=black)
+![Status](https://img.shields.io/badge/status-in%20development-orange?style=for-the-badge&logo=hackthebox&logoColor=white&labelColor=black)
+![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=black)
+![Segments](https://img.shields.io/badge/segments-4-critical?style=for-the-badge&logo=hyperledger&logoColor=white&labelColor=black)
+![Stack](https://img.shields.io/badge/stack-nftables%20%7C%20suricata%20%7C%20AD-informational?style=for-the-badge&logo=linux&logoColor=white&labelColor=black)
+
+**[Explore the segments »](#-segments)** ·
+**[Architecture](#%EF%B8%8F-architecture)** ·
+**[Report a bug](../../issues)** ·
+**[Request a feature](../../issues)** ·
+**[Roadmap](../../projects)**
 
 </div>
 
 <br>
 
-> Это не набор из десяти изолированных CTF-боксов, к каждому из которых прилагается отдельный вопрос "найди флаг".
-> Это **одна живая сеть**. Точка входа — уязвимый интернет-магазин в DMZ. Дальше — твоя цепочка: закрепление, разведка внутренней сети, повышение привилегий, боковое движение через AD в банк и в больницу. Пока ты идёшь по цепочке — SOC-сегмент смотрит на тебя через Suricata и SIEM и считает, сколько твоих шагов он реально задетектил.
+> [!NOTE]
+> This repo is filling up in stages: architecture and firewall configs first, then vulnerable services per segment, then the SOC layer with attack scenarios and writeups. Star it now if you don't want to miss the release — but hold off on standing it up, there's no live lab yet.
 
 <br>
 
-## 🧭 Как читать этот репозиторий
+## 📖 Table of Contents
 
-Каждая зона живёт в своей папке `segments/` и имеет **свой собственный README** — не нужно пролистывать один гигантский файл, чтобы найти нужный сегмент.
+<details>
+<summary>Click to expand</summary>
 
-| | Зона | Что внутри | README зоны |
-|---|---|---|---|
-| 🛒 | **E-commerce (DMZ)** | WAF + уязвимый интернет-магазин техники | [`segments/ecommerce/README.md`](segments/ecommerce/README.md) |
-| 🏦 | **Bank** | AD DC, core-banking БД, workstation оператора | [`segments/bank/README.md`](segments/bank/README.md) |
-| 🏥 | **Hospital** | EHR/PACS-сервер, legacy-хост с медицинским ПО | [`segments/hospital/README.md`](segments/hospital/README.md) |
-| 🛰 | **SOC** | Suricata NIDS + Wazuh/ELK, detection matrix | [`segments/soc/README.md`](segments/soc/README.md) |
+- [The Idea](#-the-idea)
+- [Progress](#-progress)
+- [Architecture](#%EF%B8%8F-architecture)
+- [Why It's Built This Way](#-why-its-built-this-way)
+- [Segments](#-segments)
+- [Tech Stack](#%EF%B8%8F-tech-stack)
+- [Getting Started](#-getting-started)
+- [Author](#-author)
 
-Этот файл — только точка входа: архитектура целиком, модель угроз, как поднять полигон. За деталями конкретной зоны — идёшь в её README по ссылке выше.
+</details>
 
 <br>
 
-## ⚔️ Прогресс
+## 💡 The Idea
 
-- [x] Архитектура сети и модель угроз
-- [x] Сегментация: E-commerce / Bank / Hospital / SOC
-- [x] Firewall (`nftables`)
-- [x] E-commerce: WAF + уязвимый интернет-магазин
-- [x] Bank: AD DC, core-banking БД, workstation оператора
-- [x] Hospital: EHR/PACS-сервер, legacy-хост
+**LiteTrainingGround** isn't a pile of isolated CTF boxes with a "find the flag" question bolted onto each one. It's **one connected infrastructure** spanning three business domains — e-commerce, bank, hospital — where every vulnerability is a step in a single attack chain: from the entry point in an online store, all the way to Domain Admin in the corporate network, and from there into patient/customer data — with a parallel breakdown of what the SOC actually manages to detect along the way.
+
+```
+Internet → WAF → Vulnerable electronics store (entry point)
+                            │
+                            ▼
+                Shared corporate network (AD DS, AD CS)
+                    │                       │
+                    ▼                       ▼
+             Bank segment              Hospital segment
+        (core-banking DB,          (EHR/PACS, legacy hosts
+         operator workstations)     with outdated software)
+
+Everything above is watched by Suricata NIDS + SIEM, sitting in an isolated SOC segment
+```
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
+
+<br>
+
+## ⚔️ Progress
+
+- [x] Network architecture & threat model
+- [x] Segmentation: E-commerce / Bank / Hospital / SOC
+- [x] Firewall config (`nftables`)
+- [x] E-commerce: WAF + vulnerable electronics store
+- [x] Bank: AD DC, core-banking DB, operator workstation
+- [x] Hospital: EHR/PACS server, legacy host
 - [ ] SOC: Suricata + Wazuh/ELK
-- [ ] Автодеплой (Vagrant/Packer)
-- [ ] Пошаговые сценарии атак (writeup'ы)
+- [ ] Auto-deploy scripts (Vagrant/Packer)
+- [ ] Step-by-step attack scenarios with writeups
 - [ ] Detection coverage matrix (MITRE ATT&CK)
 
-Живой статус — во вкладке [Projects](../../projects).
+Live status lives in the [Projects](../../projects) tab.
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
 
 <br>
 
-## 🗺️ Архитектура
+## 🗺️ Architecture
 
 ```
                               🌐 INTERNET
                                    │
                                    ▼
                         ┌───────────────────┐
-                        │   WAF (HAProxy +   │
-                        │    ModSecurity)     │
-                        └─────────┬──────────┘
+                        │   WAF (HAProxy +    │
+                        │    ModSecurity)      │
+                        └─────────┬───────────┘
                                    │
                      🛒 E-COMMERCE │ 10.0.10.0/24
-                     (точка входа) │  интернет-магазин техники
+                     (entry point) │  electronics store
                                    │
                                    ▼
                     ┌──────────────────────────┐
-                    │  КОРПОРАТИВНАЯ СЕТЬ (AD)   │
-                    │      AD DS · AD CS         │
-                    └────────────┬───────────────┘
+                    │   CORPORATE NETWORK (AD)   │
+                    │      AD DS · AD CS          │
+                    └────────────┬────────────────┘
                                  │
                  ┌───────────────┴───────────────┐
                  ▼                                ▼
       🏦 BANK  10.0.20.0/24              🏥 HOSPITAL  10.0.30.0/24
-      core-banking БД                    EHR / PACS-сервер
-      рабочая станция оператора          legacy-хост, устар. ПО
+      core-banking DB                    EHR / PACS server
+      operator workstation               legacy host, old software
 
      ════════════════════════════════════════════════════
                     🛰 SOC · 10.0.40.0/24
-        Suricata NIDS + Wazuh/ELK смотрят на ВСЁ выше
+        Suricata NIDS + Wazuh/ELK watching everything above
      ════════════════════════════════════════════════════
 ```
 
-| Сегмент | Подсеть | Назначение |
+| Segment | Subnet | Purpose |
 |---|---|---|
-| E-commerce (DMZ) | `10.0.10.0/24` | WAF-прокси, веб-приложение интернет-магазина |
-| Bank | `10.0.20.0/24` | AD DC, core-banking БД, рабочая станция оператора |
-| Hospital | `10.0.30.0/24` | EHR/PACS-сервер, legacy-хост, workstation мед. персонала |
-| SOC | `10.0.40.0/24` | Suricata NIDS, SIEM, мониторинг всего периметра |
+| E-commerce (DMZ) | `10.0.10.0/24` | WAF proxy, electronics store web app |
+| Bank | `10.0.20.0/24` | AD DC, core-banking DB, operator workstation |
+| Hospital | `10.0.30.0/24` | EHR/PACS server, legacy host, staff workstation |
+| SOC | `10.0.40.0/24` | Suricata NIDS, SIEM, full-perimeter monitoring |
 
-Полная модель угроз — в [`docs/architecture.md`](docs/architecture.md) *(скоро)*.
+Full threat model: [`docs/architecture.md`](docs/architecture.md) *(coming soon)*.
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
 
 <br>
 
-## 🎯 Зачем именно так
+## 🎯 Why It's Built This Way
 
-Три бизнес-домена — не для красоты, а потому что у каждого своя модель угроз и свой класс данных, которые в реальном мире защищают по-разному:
+Three business domains aren't there for decoration — each one carries a different threat model and a different class of data to protect, the same way it works in the real world:
 
-| Домен | Что защищает | Что тут отрабатывается |
+| Domain | Protects | Trained here |
 |---|---|---|
-| 🛒 E-commerce | Данные карт, заказы | SQLi, IDOR, обход WAF |
-| 🏦 Bank | Финансовые операции, PCI DSS | AD-атаки, privesc, lateral movement |
-| 🏥 Hospital | ПДн пациентов, мед. системы | Legacy-хосты, устаревшие протоколы, EternalBlue-класс |
-| 🛰 SOC | Весь периметр | Detection engineering, разбор алертов, MITRE mapping |
+| 🛒 E-commerce | Card data, orders | SQLi, IDOR, WAF bypass |
+| 🏦 Bank | Financial transactions, PCI DSS | AD attacks, privilege escalation, lateral movement |
+| 🏥 Hospital | Patient PII, medical systems | Legacy hosts, outdated protocols, EternalBlue-class bugs |
+| 🛰 SOC | The entire perimeter | Detection engineering, alert triage, MITRE mapping |
 
-Полигон устроен так, что взлом e-commerce — не отдельное упражнение, а **шаг 1** цепочки, которая ведёт через AD прямо в банк и в больницу.
+The lab is wired so that popping the e-commerce store isn't a standalone exercise — it's **step one** of a chain that runs through AD straight into the bank and the hospital.
 
-<br>
-
-## 🛠️ Стек
-
-`nftables` · `Suricata` · `Wazuh / ELK` · `HAProxy + ModSecurity` · `Active Directory` · `PostgreSQL` · `Vagrant`
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
 
 <br>
 
-## 🚀 Быстрый старт
+## 🧭 Segments
 
-> ⚠️ Автодеплой ещё не готов — сборка сейчас частично ручная. Следи за прогрессом выше.
+Each zone lives in its own folder under `segments/` and ships its **own README** — no need to scroll one giant file to find what you're after.
+
+| | Segment | What's inside | Segment README |
+|---|---|---|---|
+| 🛒 | **E-commerce (DMZ)** | WAF + vulnerable electronics store | [`segments/ecommerce/README.md`](segments/ecommerce/README.md) |
+| 🏦 | **Bank** | AD DC, core-banking DB, operator workstation | [`segments/bank/README.md`](segments/bank/README.md) |
+| 🏥 | **Hospital** | EHR/PACS server, legacy host | [`segments/hospital/README.md`](segments/hospital/README.md) |
+| 🛰 | **SOC** | Suricata NIDS + Wazuh/ELK, detection matrix | [`segments/soc/README.md`](segments/soc/README.md) |
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
+
+<br>
+
+## 🛠️ Tech Stack
+
+![nftables](https://img.shields.io/badge/nftables-000000?style=flat-square&logo=linux&logoColor=white)
+![Suricata](https://img.shields.io/badge/Suricata-CC0000?style=flat-square&logo=suricata&logoColor=white)
+![Wazuh](https://img.shields.io/badge/Wazuh%2FELK-005571?style=flat-square&logo=elastic&logoColor=white)
+![HAProxy](https://img.shields.io/badge/HAProxy%20%2B%20ModSecurity-106DA9?style=flat-square&logo=haproxy&logoColor=white)
+![AD](https://img.shields.io/badge/Active%20Directory-0078D4?style=flat-square&logo=windows&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Vagrant](https://img.shields.io/badge/Vagrant-1868F2?style=flat-square&logo=vagrant&logoColor=white)
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
+
+<br>
+
+## 🚀 Getting Started
+
+> [!WARNING]
+> Auto-deploy isn't ready yet — spin-up is still partly manual. Watch the progress checklist above for updates.
+
+### Prerequisites
+
+- Vagrant + a hypervisor (VirtualBox/libvirt)
+- ~16 GB RAM free for the full four-segment lab
+- Basic familiarity with `nftables` and Active Directory
+
+### Clone
 
 ```bash
 git clone https://github.com/Mavrhide/LiteTrainingGround--LTG-.git
 cd LiteTrainingGround--LTG-
-# дальше — по README нужного сегмента
 ```
+
+From here, follow the README inside the segment you want to attack first.
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
 
 <br>
 
-## 🔗 Автор
+## 👤 Author
 
 <div align="center">
 
@@ -140,6 +212,8 @@ cd LiteTrainingGround--LTG-
 
 📜 [PT EdTechLab — SIEM](https://github.com/Mavrhide/Certificates/blob/main/PT-EdTechLab-SIEM.pdf) · [PT EdTechLab — NTA](https://github.com/Mavrhide/Certificates/blob/main/PT-EdTechLab-NTA.pdf)
 
-⭐ Если заходит идея — стар и ждать релиз. Разворачивать пока рано, но недолго осталось.
+⭐ **Star it if the idea's interesting — the live lab isn't far off.**
+
+<sub>[⬆ back to top](#-lite-training-ground)</sub>
 
 </div>
