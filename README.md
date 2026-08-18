@@ -12,6 +12,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=black)
 ![Segments](https://img.shields.io/badge/segments-4-critical?style=for-the-badge&logo=hyperledger&logoColor=white&labelColor=black)
 ![Stack](https://img.shields.io/badge/stack-nftables%20%7C%20suricata%20%7C%20AD-informational?style=for-the-badge&logo=linux&logoColor=white&labelColor=black)
+![Made in](https://img.shields.io/badge/made%20in-Dagestan-green?style=for-the-badge&labelColor=black)
 
 **[Explore the segments »](#-segments)** ·
 **[Architecture](#%EF%B8%8F-architecture)** ·
@@ -32,9 +33,8 @@
 
 ```bash
 1. Install Vagrant (+ a hypervisor, e.g. VirtualBox)
-2. git clone https://github.com/Mavrhide/LiteTrainingGround--LTG-.git
-3. cd LiteTrainingGround--LTG-
-4. vagrant up
+2. Download the Vagrantfile: https://raw.githubusercontent.com/Mavrhide/LiteTrainingGround--LTG-/main/Vagrantfile
+3. vagrant up
 ```
 
 > [!WARNING]
@@ -103,35 +103,11 @@ Live status lives in the [Projects](../../projects) tab.
 
 ## 🗺️ Architecture
 
-```
-                              🌐 INTERNET
-                                   │
-                                   ▼
-                        ┌───────────────────┐
-                        │   WAF (HAProxy +    │
-                        │    ModSecurity)      │
-                        └─────────┬───────────┘
-                                   │
-                     🛒 E-COMMERCE │ 10.0.10.0/24
-                     (entry point) │  electronics store
-                                   │
-                                   ▼
-                    ┌──────────────────────────┐
-                    │   CORPORATE NETWORK (AD)   │
-                    │      AD DS · AD CS          │
-                    └────────────┬────────────────┘
-                                 │
-                 ┌───────────────┴───────────────┐
-                 ▼                                ▼
-      🏦 BANK  10.0.20.0/24              🏥 HOSPITAL  10.0.30.0/24
-      core-banking DB                    EHR / PACS server
-      operator workstation               legacy host, old software
+<div align="center">
 
-     ════════════════════════════════════════════════════
-                    🛰 SOC · 10.0.40.0/24
-        Suricata NIDS + Wazuh/ELK watching everything above
-     ════════════════════════════════════════════════════
-```
+<img src="https://raw.githubusercontent.com/Mavrhide/LiteTrainingGround--LTG-/main/image/TOPOLOGIE.png" alt="Network Topology" width="90%">
+
+</div>
 
 | Segment | Subnet | Purpose |
 |---|---|---|
