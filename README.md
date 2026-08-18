@@ -28,6 +28,20 @@
 
 <br>
 
+## ⚡ Quick Start (TL;DR)
+
+```bash
+1. Install Vagrant (+ a hypervisor, e.g. VirtualBox)
+2. git clone https://github.com/Mavrhide/LiteTrainingGround--LTG-.git
+3. cd LiteTrainingGround--LTG-
+4. vagrant up
+```
+
+> [!WARNING]
+> `vagrant up` provisions all four segments end-to-end — expect **40–50+ minutes**. The provisioning flow isn't finished yet, so a full `vagrant up` won't complete cleanly at this stage. Full setup instructions once it's stable: [Getting Started](#-getting-started).
+
+<br>
+
 ## 📖 Table of Contents
 
 <details>
