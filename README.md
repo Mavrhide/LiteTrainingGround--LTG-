@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Mavrhide/LiteTrainingGround--LTG-/main/image/photo_2026-08-18_15-00-48.jpg" alt="LiteTrainingGround Banner" width="100%">
+<img src="https://raw.githubusercontent.com/Mavrhide/LiteTrainingGround--LTG-/main/image/BANNER_LTG" alt="LiteTrainingGround Banner" width="100%">
 
 # 🎯 LITE TRAINING GROUND
 
